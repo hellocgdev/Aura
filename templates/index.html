@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTRUM | Complete Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #FDFDFD;
+            --bg-card: #FFFFFF;
+            --text-primary: #151515;
+            --text-secondary: #4A4A4A;
+            --gold-accent: #BFA15F;
+            --border-color: #EAEAEA;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            padding-bottom: 4rem;
+        }
+
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; }
+
+        header {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* FORM */
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: var(--bg-card);
+            padding: 3rem;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+        }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; }
+        input { width: 100%; border: none; border-bottom: 1px solid #DDD; padding: 0.5rem 0; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; outline: none; }
+        
+        button {
+            width: 100%; background: #111; color: #FFF; padding: 1rem; 
+            border: none; text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer; margin-top: 1rem;
+        }
+
+        /* DASHBOARD GRID */
+        #result-area {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            margin: 4rem auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover { transform: translateY(-5px); }
+
+        .card h3 {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--gold-accent);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        /* Specific Card Sizes */
+        .card-wide { grid-column: span 2; }
+        .card-tall { grid-row: span 2; }
+        .card-small { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        .big-number { font-size: 4rem; font-family: 'Cormorant Garamond', serif; color: var(--gold-accent); }
+        .color-swatch { width: 50px; height: 50px; border-radius: 50%; margin-top: 1rem; border: 1px solid #EEE; }
+
+        /* Big Three Bar */
+        .big-three-bar {
+            grid-column: span 3;
+            display: flex;
+            justify-content: space-around;
+            background: #FFF;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+        }
+        .b3-item span { display: block; font-size: 0.7rem; letter-spacing: 0.2em; color: #888; text-transform: uppercase; }
+        .b3-item strong { font-family: 'Cormorant Garamond', serif; font-size: 2rem; }
+
+        /* Loader */
+        .loader {
+            border: 2px solid #EEE; border-top: 2px solid var(--gold-accent);
+            border-radius: 50%; width: 30px; height: 30px;
+            animation: spin 1s linear infinite; margin: 20px auto; display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .card-wide, .card-tall, .big-three-bar { grid-column: span 1; }
+            .big-three-bar { flex-direction: column; gap: 2rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Astrum</h1>
+        <p style="letter-spacing: 0.3em; font-size: 0.8rem; text-transform: uppercase; margin-top: 0.5rem;">The Complete Profile</p>
+    </header>
+
+    <div class="container" id="input-form">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name">
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" id="city">
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <div class="form-group" style="flex:1"><label>Date</label><input type="date" id="dob"></div>
+            <div class="form-group" style="flex:1"><label>Time</label><input type="time" id="tob"></div>
+        </div>
+        <button onclick="generateProfile()">Reveal Destiny</button>
+        <div class="loader" id="loader"></div>
+    </div>
+
+    <div id="result-area">
+        
+        <div class="dashboard-grid">
+            
+            <!-- Big Three Header -->
+            <div class="big-three-bar">
+                <div class="b3-item"><span>Sun</span><strong id="sun-sign">-</strong></div>
+                <div class="b3-item"><span>Moon</span><strong id="moon-sign">-</strong></div>
+                <div class="b3-item"><span>Rising</span><strong id="rising-sign">-</strong></div>
+            </div>
+
+            <!-- Personality (Wide) -->
+            <div class="card card-wide">
+                <h3>Core Personality</h3>
+                <p id="personality-text">...</p>
+            </div>
+
+            <!-- Lucky Number (Small) -->
+            <div class="card card-small">
+                <h3>Power Number</h3>
+                <div class="big-number" id="lucky-number">-</div>
+            </div>
+
+            <!-- Future (Tall) -->
+            <div class="card card-tall">
+                <h3>Future Forecast</h3>
+                <p id="future-text">...</p>
+            </div>
+
+            <!-- Career -->
+            <div class="card">
+                <h3>Career Path</h3>
+                <p id="career-text">...</p>
+            </div>
+
+            <!-- Love -->
+            <div class="card">
+                <h3>Love & Heart</h3>
+                <p id="love-text">...</p>
+            </div>
+
+            <!-- Life Path -->
+            <div class="card">
+                <h3>Life Purpose</h3>
+                <p id="life-text">...</p>
+            </div>
+
+            <!-- Lucky Color -->
+            <div class="card card-small">
+                <h3>Aura Color</h3>
+                <p id="lucky-color" style="font-size: 1.2rem; margin-top: 0.5rem;">-</p>
+                <div class="color-swatch" id="color-swatch"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function generateProfile() {
+            const form = document.getElementById('input-form');
+            const loader = document.getElementById('loader');
+            
+            if(!document.getElementById('dob').value) { alert("Please enter date of birth."); return; }
+
+            document.querySelector('button').style.display = 'none';
+            loader.style.display = 'block';
+
+            try {
+                const [year, month, day] = document.getElementById('dob').value.split('-');
+                const [hour, minute] = document.getElementById('tob').value.split(':');
+
+                const response = await fetch('/api/chart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        city: document.getElementById('city').value,
+                        year, month, day, hour, minute
+                    })
+                });
+
+                const result = await response.json();
+                
+                if(result.success) {
+                    const d = result.data;
+                    const a = d.analysis;
+
+                    // Signs
+                    document.getElementById('sun-sign').textContent = d.sun;
+                    document.getElementById('moon-sign').textContent = d.moon;
+                    document.getElementById('rising-sign').textContent = d.rising;
+
+                    // Analysis
+                    document.getElementById('personality-text').textContent = a.personality;
+                    document.getElementById('future-text').textContent = a.future;
+                    document.getElementById('career-text').textContent = a.career;
+                    document.getElementById('love-text').textContent = a.love;
+                    document.getElementById('life-text').textContent = a.life;
+
+                    // Lucky Items
+                    document.getElementById('lucky-number').textContent = a.number;
+                    document.getElementById('lucky-color').textContent = a.color;
+                    // Simple color mapping or fallback to gold
+                    document.getElementById('color-swatch').style.backgroundColor = a.color.toLowerCase().includes('red') ? '#D44' : '#C5A028';
+
+                    form.style.display = 'none';
+                    document.getElementById('result-area').style.display = 'block';
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Error connecting to the stars.");
+            } finally {
+                loader.style.display = 'none';
+                document.querySelector('button').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
